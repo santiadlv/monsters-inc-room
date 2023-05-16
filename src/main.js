@@ -441,6 +441,24 @@ function init() {
     );
 
     loader.load(
+      './models/painting-canvas.stl',
+      function (geometry) {
+          geometry.center();
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.scale.set(0.25, 0.25, 0.25);
+          mesh.rotation.set(-90 * rad, 0, 60 * rad);
+          mesh.position.set(30, 7, 40);
+          scene.add(mesh);
+      },
+      (xhr) => {
+          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+      },
+      (err) => {
+          console.log(err);
+      }
+  );
+
+    loader.load(
         './models/carpet.stl',
         function (geometry) {
             geometry.center();
