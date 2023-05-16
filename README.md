@@ -8,7 +8,7 @@ After cloning the repository, `cd` into it and run `npm install` to install the 
 
 ## Usage
 
-Run `npm start` to start a development server locally. It should automatically open the project in your default web browser. If it doesn't, navigate to [localhost at port 8080](http://localhost:8080/public/) and you should see a colorful spinning cube.
+Run `npm run dev` to start a development server locally. It should automatically open the project in your default web browser. If it doesn't, navigate to [localhost at port 5173](http://localhost:5173/index.html) and you should see a colorful spinning cube.
 
 ## Scene
 
