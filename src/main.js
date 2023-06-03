@@ -1,12 +1,32 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/addons/loaders/STLLoader';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 let rad = Math.PI / 180;
 let camera, scene, renderer, controls;
 
 init();
 animate();
+
+function createMaterial() {
+    // create a texture loader.
+    const textureLoader = new THREE.TextureLoader();
+
+    // load a texture
+    const texture = textureLoader.load(
+        './src/textures/500.jpeg'
+        // 'https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/pf-s125-ake7011-a.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=e0614d01434b0078435c9c9b6463c9c1',
+    );
+
+    // create a "standard" material using
+    // the texture we just loaded as a color map
+    const material = new THREE.MeshPhongMaterial({
+        map: texture,
+    });
+
+    return material;
+}
 
 function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -24,9 +44,25 @@ function init() {
         1000
     );
 
+
+    // const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
+    // scene.add(ambientLight);
+
+    // const pointLight = new THREE.PointLight(0xffffff, 0.8);
+    // camera.add(pointLight);
+    // scene.add(camera);
+
     camera.rotation.set(-90 * rad, -45 * rad, -20 * rad);
     camera.position.set(0, 60, 90);
     scene.add(camera);
+
+
+    const map = new THREE.TextureLoader().load('../src/textures/Carbon.png');
+    map.wrapS = map.wrapT = THREE.RepeatWrapping;
+    map.anisotropy = 16;
+    map.colorSpace = THREE.SRGBColorSpace;
+
+    const material2 = new THREE.MeshPhongMaterial({ map: map, side: THREE.DoubleSide });
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -43,12 +79,25 @@ function init() {
 
     const material = new THREE.MeshNormalMaterial();
 
+
+    const texture = new THREE.TextureLoader().load('../src/textures/500.jpeg');
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.magFilter = THREE.NearestFilter;
+
+
+    const texture2 = new THREE.TextureLoader().load('../src/textures/500.jpeg');
+    const materialeees = new THREE.MeshPhongMaterial({ map: map, side: texture2 });
+
+
+    // const mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { map: texture, side: THREE.DoubleSide } ) );
+
     const loader = new STLLoader();
+    const loader2 = new OBJLoader();
     loader.load(
         './models/toy-basket.stl',
         function (geometry) {
             geometry.center();
-            const mesh = new THREE.Mesh(geometry, material);
+            const mesh = new THREE.Mesh(geometry, material2);
             mesh.scale.set(0.05, 0.05, 0.05);
             mesh.rotation.set(-90 * rad, 0, 75 * rad);
             mesh.position.set(-25, 2, -20);
@@ -63,22 +112,22 @@ function init() {
     );
 
     loader.load(
-      './models/toy-basket.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.05, 0.05, 0.05);
-          mesh.rotation.set(-90 * rad, 0, 0);
-          mesh.position.set(40, 10, -4.5);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
+        './models/toy-basket.stl',
+        function (geometry) {
+            geometry.center();
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.scale.set(0.05, 0.05, 0.05);
+            mesh.rotation.set(-90 * rad, 0, 0);
+            mesh.position.set(40, 10, -4.5);
+            scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
 
     loader.load(
         './models/rocking-chair.stl',
@@ -135,28 +184,28 @@ function init() {
     );
 
     loader.load(
-      './models/bookshelf.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.2, 0.2, 0.2);
-          mesh.rotation.set(-90 * rad, 0, 0);
-          mesh.position.set(10, 25, -47);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
+        './models/bookshelf.stl',
+        function (geometry) {
+            geometry.center();
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.scale.set(0.2, 0.2, 0.2);
+            mesh.rotation.set(-90 * rad, 0, 0);
+            mesh.position.set(10, 25, -47);
+            scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
 
     loader.load(
         './models/table.stl',
         function (geometry) {
             geometry.center();
-            const mesh = new THREE.Mesh(geometry, material);
+            const mesh = new THREE.Mesh(geometry, material2);
             mesh.scale.set(0.2, 0.2, 0.2);
             mesh.rotation.set(-90 * rad, 0, 30 * rad);
             mesh.position.set(-20, 3.5, 5);
@@ -441,32 +490,82 @@ function init() {
     );
 
     loader.load(
-      './models/painting-canvas.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.25, 0.25, 0.25);
-          mesh.rotation.set(-90 * rad, 0, 60 * rad);
-          mesh.position.set(30, 7, 40);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
-
-    loader.load(
-        './models/carpet.stl',
+        './models/painting-canvas.stl',
         function (geometry) {
             geometry.center();
             const mesh = new THREE.Mesh(geometry, material);
-            mesh.scale.set(0.3, 0.3, 0.75);
-            mesh.rotation.set(-90 * rad, 0, -90 * rad);
-            mesh.position.set(10, 0, 15);
+            mesh.scale.set(0.25, 0.25, 0.25);
+            mesh.rotation.set(-90 * rad, 0, 60 * rad);
+            mesh.position.set(30, 7, 40);
             scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
+
+    const texture3 = new THREE.TextureLoader().load( './src/textures/500.jpeg' );
+    texture3.wrapS = map.wrapT = THREE.RepeatWrapping;
+	texture3.colorSpace = THREE.SRGBColorSpace;
+	texture3.flipY = false;
+    const material3 = new THREE.MeshBasicMaterial( { map: texture3 } );
+    
+    loader2.load(
+        './models/tinker.obj',
+        function () {
+            // STL 
+            // geometry.center();
+            // const mesh = new THREE.Mesh(geometry, materialess);
+            // mesh.scale.set(0.3, 0.3, 0.75);
+            // mesh.rotation.set(-90 * rad, 0, -90 * rad);
+            // mesh.position.set(10, 0, 15);
+
+            // .OBJ 
+            // geometry.traverse(function (child) {
+            //     if (child instanceof THREE.Mesh) {
+            //         child.material = material3;
+            //     }
+            // });
+
+            const texture = new THREE.TextureLoader().load( './src/textures/500.jpeg' );
+			texture.colorSpace = THREE.SRGBColorSpace;
+
+			const geometry = new THREE.BoxGeometry( 20, 20, 20 );
+			const material = new THREE.MeshBasicMaterial( { map: texture } );
+
+			let mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
+
+    loader2.load(
+        './models/tinker.obj',
+        function (geometry) {
+            // STL 
+            // geometry.center();
+            // const mesh = new THREE.Mesh(geometry, materialess);
+            // mesh.scale.set(0.3, 0.3, 0.75);
+            // mesh.rotation.set(-90 * rad, 0, -90 * rad);
+            // mesh.position.set(10, 0, 15);
+
+            // .OBJ 
+            geometry.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material = material3;
+                }
+            });
+            geometry.computeFaceNormals()
+			scene.add( geometry );
+
         },
         (xhr) => {
             console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
