@@ -63,7 +63,7 @@ A portion of the models in our collection were crafted by our team, while an add
 
 ## Demo Video
 
-[Demo](https://youtu.be/pOQRwMz0Be0)
+[Monsters Inc's Room](https://youtu.be/pOQRwMz0Be0)
 
 ## Contributors
 
