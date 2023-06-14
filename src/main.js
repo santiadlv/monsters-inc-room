@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/addons/loaders/STLLoader';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let rad = Math.PI / 180;
@@ -44,6 +45,8 @@ function init() {
     const material = new THREE.MeshNormalMaterial();
 
     const loader = new STLLoader();
+    const loader2 = new OBJLoader();
+
     loader.load(
         './models/toy-basket.stl',
         function (geometry) {
@@ -63,32 +66,50 @@ function init() {
     );
 
     loader.load(
-      './models/toy-basket.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.05, 0.05, 0.05);
-          mesh.rotation.set(-90 * rad, 0, 0);
-          mesh.position.set(40, 10, -4.5);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
-
-    loader.load(
-        './models/rocking-chair.stl',
+        './models/toy-basket.stl',
         function (geometry) {
             geometry.center();
             const mesh = new THREE.Mesh(geometry, material);
-            mesh.scale.set(0.4, 0.4, 0.4);
-            mesh.rotation.set(-90 * rad, 0, -45 * rad);
-            mesh.position.set(40, 8.5, -40);
+            mesh.scale.set(0.05, 0.05, 0.05);
+            mesh.rotation.set(-90 * rad, 0, 0);
+            mesh.position.set(40, 10, -4.5);
             scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
+
+    const textureMap = new THREE.TextureLoader().load('./src/textures/wood.jpeg');
+    textureMap.colorSpace = THREE.SRGBColorSpace;
+
+    // <------- FOR REPEATING THE TEXTURE -------> 
+    textureMap.repeat.set(10, 10);
+    textureMap.wrapS = THREE.RepeatWrapping;
+    textureMap.wrapT = THREE.RepeatWrapping;
+    textureMap.flipY = false;
+
+    const materialWood = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        map: textureMap,
+    });
+
+    loader2.load(
+        './models/rocking-chair.obj',
+        function (geometry) {
+            // .OBJ 
+            geometry.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material = materialWood;
+                }
+            });
+            geometry.scale.set(0.4, 0.4, 0.4);
+            geometry.position.set(30, 0, 0); 
+            geometry.rotation.set(0, 3700, 0);
+            scene.add(geometry);
         },
         (xhr) => {
             console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
@@ -135,22 +156,22 @@ function init() {
     );
 
     loader.load(
-      './models/bookshelf.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.2, 0.2, 0.2);
-          mesh.rotation.set(-90 * rad, 0, 0);
-          mesh.position.set(10, 25, -47);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
+        './models/bookshelf.stl',
+        function (geometry) {
+            geometry.center();
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.scale.set(0.2, 0.2, 0.2);
+            mesh.rotation.set(-90 * rad, 0, 0);
+            mesh.position.set(10, 25, -47);
+            scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
 
     loader.load(
         './models/table.stl',
@@ -441,22 +462,22 @@ function init() {
     );
 
     loader.load(
-      './models/painting-canvas.stl',
-      function (geometry) {
-          geometry.center();
-          const mesh = new THREE.Mesh(geometry, material);
-          mesh.scale.set(0.25, 0.25, 0.25);
-          mesh.rotation.set(-90 * rad, 0, 60 * rad);
-          mesh.position.set(30, 7, 40);
-          scene.add(mesh);
-      },
-      (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      (err) => {
-          console.log(err);
-      }
-  );
+        './models/painting-canvas.stl',
+        function (geometry) {
+            geometry.center();
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.scale.set(0.25, 0.25, 0.25);
+            mesh.rotation.set(-90 * rad, 0, 60 * rad);
+            mesh.position.set(30, 7, 40);
+            scene.add(mesh);
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+        },
+        (err) => {
+            console.log(err);
+        }
+    );
 
     loader.load(
         './models/carpet.stl',
